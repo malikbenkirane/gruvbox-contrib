@@ -29,6 +29,8 @@ I can share very briefly my personal setup:
 - `vim` inside `st` terminal emulator ([link to suckless.org][1])
 - `xst` fork of `st` should work (but vanilla `st` doesn't work)
 
+[1]: https://st.suckless.org
+
 This have been written because I wanted to automate sending `SIGUSR1` to
 all `st` terminals and at same time update to another colorscheme.
 
@@ -48,6 +50,13 @@ pass `GRUV_XRESOURCES` shell variable by environment
 
 Edit or pass the path to where your xresources are located
 (see `xresources` folder at root).
+
+tl;dr
+- 256.sh script to fix screen and vim [here][2]
+- macos/osx fork [here][3]
+
+[2]: https://github.com/morhetz/gruvbox/blob/master/gruvbox_256palette.sh
+[3]: https://github.com/morhetz/gruvbox/blob/master/gruvbox_256palette_osx.sh
 
 Then in order to fix `vim` terminal colors you will need a file named
 `gruvbox256.sh`at the location for xresources
@@ -73,7 +82,10 @@ Other features
 
 It writes a vim script to `$HOME/.grvim` this script works if
 there is gruvbox plugin available. By this I mean `gruvbox256.sh` script
-properly located (see context/requirements).
+properly located
+(see context/requirements tl;dr find the plugin [here][4]).
+
+[4]: https://github.com/morhetz/gruvbox
 
 Font utilities
 ---------------
