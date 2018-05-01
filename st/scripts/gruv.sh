@@ -113,16 +113,49 @@ fn() {
         local fdefaults=$(font_defaults)
         local fs
         if [ $(echo $fdefaults | wc -l) -eq 2 ]; then
-            fs=":$(echo $fdefaults | (read line; read line; echo $line))"
+            fs=":$(echo $fdefaults | (read line; read line; echo size=$line))"
         fi
         echo "st.font: $@$fs" | xrdb -override
         return
+    else
+        font_defaults | head -n 1
     fi
     return 1
 }
 
+# is_numeric helper
+is_numeric() {
+    echo $1 | grep "^[0-9][0-9]\?"
+    return $?
+}
+
 # font size utility
+font_default_size() {
+    local fs
+    if [ $(font_defaults | wc -l) -gt 1 ]; then
+        fs=$(font_defaults | tail -n 1)
+    # FIXME MAYBE this is never the case.  There could not be font
+    # size echoed alone by `font_defaults` because there is always
+    # at least font name printed by xrdb API.
+    elif font_defaults | is_numeric; then
+        fs
+    else
+        return 1
+    fi
+    echo "Actual Font Size is $fs"
+    return 0
+}
+
 fs() {
+    if [ "$2" ]; then
+        echo " > Give one argument only (font size)"
+        font_default_size
+        return
+    elif echo $1 | grep -v "^[0-9][0-9]\?" > /dev/null; then
+        echo "> Give only font size"
+        font_default_size
+        return 
+    fi
     local arg=$@
     if [ "$arg" ]; then
         local fdefaults=$(font_defaults)
