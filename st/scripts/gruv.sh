@@ -53,8 +53,9 @@ gruvbox_choose_vimopts() {
     # $1 theme vairant (required)
     # $2 contrast variant (optional)
     local opts
+    opts="colo gruvbox"
     case $1 in
-        light|dark) opts="set background=$1" ;;
+        light|dark) opts="$opts\nset background=$1" ;;
         *) return 1 ;;
     esac
     case $2 in
@@ -62,7 +63,6 @@ gruvbox_choose_vimopts() {
         *) opts="$opts\nlet g:gruvbox_contrast_$1='medium'";;
     esac
     opts="$opts\nsilent !sh $repo/gruvbox256.sh"
-    opts="$opts\ncolo gruvbox"
 
     echo $opts
     return 0
@@ -73,98 +73,22 @@ gruvbox_automate() {
     # namesapce: `gruvbox_
     local xresources="$repo$(gruvbox_choose_xresources $1 $2)"
     xrdb -override $xresources
-    echo '" .gruvvimrc'
+    echo '" .grvim (just a system wide colorscheme manager)'
     gruvbox_choose_vimopts $1 $2
 }
 
+
 # gruv utility
+print_usage() {
+    echo 'light or dark ? [perhaps soft, medium, dark] ?'
+}
+
 gruv() {
     # gruv utility
     if [ -n "$1" ]; then
         gruvbox_automate $1 $2 | tee ~/.grvim > /dev/null
         return 0
     fi
-    return 1
-}
-
-
-# font utilities
-# --------------
-
-font_defaults() {
-    local defaults
-    local fontname
-    local fontsize
-    if defaults=$(command xrdb -query | grep st.font); then
-        fontname=$(echo $defaults | cut -d':' -f2 | sed 's/^\s\+//')
-        echo $fontname
-        if echo $defaults | grep size > /dev/null; then
-            fontsize=$(echo $defaults | sed 's/.*=//')
-            echo $fontsize
-        fi
-    fi
-}
-
-
-# font name utility
-fn() {
-    local arg=$@
-    if [ "$arg" ]; then
-        local fdefaults=$(font_defaults)
-        local fs
-        if [ $(echo $fdefaults | wc -l) -eq 2 ]; then
-            fs=":$(echo $fdefaults | (read line; read line; echo size=$line))"
-        fi
-        echo "st.font: $@$fs" | xrdb -override
-        return
-    else
-        font_defaults | head -n 1
-    fi
-    return 1
-}
-
-# is_numeric helper
-is_numeric() {
-    echo $1 | grep "^[0-9][0-9]\?"
-    return $?
-}
-
-# font size utility
-font_default_size() {
-    local fs
-    if [ $(font_defaults | wc -l) -gt 1 ]; then
-        fs=$(font_defaults | tail -n 1)
-    # FIXME MAYBE this is never the case.  There could not be font
-    # size echoed alone by `font_defaults` because there is always
-    # at least font name printed by xrdb API.
-    elif font_defaults | is_numeric; then
-        fs
-    else
-        return 1
-    fi
-    echo "Actual Font Size is $fs"
-    return 0
-}
-
-fs() {
-    if [ "$2" ]; then
-        echo " > Give one argument only (font size)"
-        font_default_size
-        return
-    elif echo $1 | grep -v "^[0-9][0-9]\?" > /dev/null; then
-        echo "> Give only font size"
-        font_default_size
-        return 
-    fi
-    local arg=$@
-    if [ "$arg" ]; then
-        local fdefaults=$(font_defaults)
-        local fn
-        if [ $(echo $fdefaults | wc -l) -gt 0 ]; then
-            fn="$(echo $fdefaults | (read line; echo $line))"
-        fi
-        echo "st.font: ${fn}:size=$1" | xrdb -override
-        return 0
-    fi
+    print_usage
     return 1
 }

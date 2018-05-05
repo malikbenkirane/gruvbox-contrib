@@ -6,14 +6,11 @@ Usage
 # then in any shell you can use
 
  gruv [light|dark] [soft|medium|med|hard]
- fn [font name]
- fs [font size]
 ```
 
 _Step by step..._
 - source this script
 - then you can use `gruv` function (this generates `~/.grvim` vim script)
-- then also use `fn` and `fs` functions (to change _font name_ or _font size_)
 
 
 Context / Requirements
@@ -87,13 +84,8 @@ properly located
 
 [4]: https://github.com/morhetz/gruvbox
 
-Font utilities
----------------
-
-- `fn` to change font name
-- `fs` to change font size
-
 --------------------------------------------------------------------------------
 __TODO__
 * support gnu-like options
 e.g. --config -c options
+* [unix.stackexchange: Getting a window's PID by clicking on it](https://unix.stackexchange.com/questions/19161/getting-a-windows-pid-by-clicking-on-it?utm_medium=organic&utm_source=google_rich_qa&utm_campaign=google_rich_qa)
